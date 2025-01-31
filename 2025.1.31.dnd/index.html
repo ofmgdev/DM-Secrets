@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>D&D Map Creator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="container">
+        <div id="toolbar">
+            <button onclick="setTool('floor')">Floor</button>
+            <button onclick="setTool('wall')">Wall</button>
+            <button onclick="openCharacterSheet()">Create Character</button>
+            <button onclick="saveCampaign()">Save Campaign</button>
+            <button onclick="openStats()">View Stats</button>
+        </div>
+        <div id="map"></div>
+        <div id="character-list">
+            <h3>Characters</h3>
+        </div>
+    </div>
+
+    <!-- Character Creation Modal -->
+    <div id="charSheet" class="modal">
+        <div class="modal-content">
+            <h2>Create Character</h2>
+            <div class="form-group">
+                <label>Name:</label>
+                <input type="text" id="charName">
+            </div>
+            <div class="form-group">
+                <label>Color:</label>
+                <input type="color" id="charColor" value="#ff0000">
+            </div>
+            <div id="creation-steps"></div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="statsSheet" class="stats-modal">
+        <div class="stats-content">
+            <h2>Character Stats</h2>
+            <div id="charInfo"></div>
+            <div class="stats-grid">...</div>
+            <button onclick="saveStats()">Save Stats</button>
+            <button onclick="closeModal('statsSheet')">Close</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
