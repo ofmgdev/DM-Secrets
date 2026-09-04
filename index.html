@@ -1,52 +1,107 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <title>D&D Map Creator</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DM Secrets — D&D Game Table</title>
+  <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <div id="container">
-        <div id="toolbar">
-            <button onclick="setTool('floor')">Floor</button>
-            <button onclick="setTool('wall')">Wall</button>
-            <button onclick="openCharacterSheet()">Create Character</button>
-            <button onclick="saveCampaign()">Save Campaign</button>
-            <button onclick="openStats()">View Stats</button>
-        </div>
-        <div id="map"></div>
-        <div id="character-list">
-            <h3>Characters</h3>
-        </div>
+  <header id="topbar">
+    <div class="brand">DM&nbsp;Secrets</div>
+
+    <div class="toolgroup" id="map-tools">
+      <button data-tool="select" class="tool active" title="Select / move tokens (V)">◈ Select</button>
+      <button data-tool="floor"  class="tool" title="Paint floor (F)">▦ Floor</button>
+      <button data-tool="wall"   class="tool" title="Paint wall (W)">▩ Wall</button>
+      <button data-tool="erase"  class="tool" title="Erase terrain (E)">⌫ Erase</button>
+      <span class="sep"></span>
+      <button id="toggle-grid" class="tool" title="Toggle grid"># Grid</button>
+      <button id="reset-view" class="tool" title="Reset pan &amp; zoom">⤢ Fit</button>
     </div>
 
-    <!-- Character Creation Modal -->
-    <div id="charSheet" class="modal">
-        <div class="modal-content">
-            <h2>Create Character</h2>
-            <div class="form-group">
-                <label>Name:</label>
-                <input type="text" id="charName">
-            </div>
-            <div class="form-group">
-                <label>Color:</label>
-                <input type="color" id="charColor" value="#ff0000">
-            </div>
-            <div id="creation-steps"></div>
-        </div>
+    <div class="toolgroup">
+      <button id="btn-add-token" class="tool">＋ Token</button>
+      <button id="btn-new-char" class="tool">＋ Character</button>
+      <button id="btn-roll-combat" class="tool">⚔ Roll Initiative</button>
     </div>
 
-    <!-- Stats Modal -->
-    <div id="statsSheet" class="stats-modal">
-        <div class="stats-content">
-            <h2>Character Stats</h2>
-            <div id="charInfo"></div>
-            <div class="stats-grid">...</div>
-            <button onclick="saveStats()">Save Stats</button>
-            <button onclick="closeModal('statsSheet')">Close</button>
-        </div>
+    <div class="toolgroup right">
+      <button id="btn-campaign" class="tool">▤ Campaign</button>
     </div>
+  </header>
 
-    <script src="script.js"></script>
+  <main id="workspace">
+    <section id="stage" aria-label="Battle map">
+      <div id="viewport">
+        <div id="board">
+          <canvas id="terrain"></canvas>
+          <div id="grid-overlay"></div>
+          <div id="token-layer"></div>
+        </div>
+      </div>
+      <div id="stage-hint">drag to pan · scroll to zoom</div>
+    </section>
+
+    <aside id="sidebar">
+      <div class="panel" id="panel-combat">
+        <h2>Initiative</h2>
+        <div id="combat-controls" class="row">
+          <button id="btn-combat-toggle" class="mini">Start combat</button>
+          <span id="combat-round" class="muted"></span>
+        </div>
+        <ol id="initiative-list" class="init-list"></ol>
+      </div>
+
+      <div class="panel" id="panel-tokens">
+        <h2>Tokens on map</h2>
+        <ul id="token-list" class="stack"></ul>
+      </div>
+
+      <div class="panel" id="panel-chars">
+        <h2>Characters</h2>
+        <ul id="character-list" class="stack"></ul>
+      </div>
+
+      <div class="panel" id="panel-dice">
+        <h2>Dice</h2>
+        <div class="row dice-quick">
+          <button data-roll="1d20">d20</button>
+          <button data-roll="1d12">d12</button>
+          <button data-roll="1d10">d10</button>
+          <button data-roll="1d8">d8</button>
+          <button data-roll="1d6">d6</button>
+          <button data-roll="1d4">d4</button>
+          <button data-roll="1d100">d100</button>
+        </div>
+        <form id="dice-form" class="row">
+          <input id="dice-input" type="text" placeholder="e.g. 2d6+3, 4d6kh3, 1d20+5" autocomplete="off">
+          <button type="submit">Roll</button>
+        </form>
+        <ul id="roll-log" class="roll-log"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ===== Modals ===== -->
+  <div class="modal-root" id="modal-root" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-window" role="dialog" aria-modal="true">
+      <button class="modal-x" data-close aria-label="Close">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <template id="tpl-token-context">
+    <div class="ctx-menu">
+      <button data-act="sheet">Open sheet</button>
+      <button data-act="hp">Adjust HP</button>
+      <button data-act="init">Roll initiative</button>
+      <button data-act="color">Change color</button>
+      <button data-act="remove" class="danger">Remove token</button>
+    </div>
+  </template>
+
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
